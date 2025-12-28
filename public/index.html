@@ -179,7 +179,7 @@
     <div id="mobile-nav"
         class="fixed inset-0 z-50 bg-brand-yellow flex flex-col items-center justify-center gap-10 text-4xl font-black border-l-4 border-black">
         <button onclick="toggleNav()" class="absolute top-6 right-6 text-5xl">&times;</button>
-        <a href="/" onclick="toggleNav()" class="hover:text-white">HOME</a>
+        <a href="/docs" onclick="toggleNav()" class="hover:text-white">API DOCS</a>
         <a href="https://github.com/yemobyte/YeMo-SC" onclick="toggleNav()" class="hover:text-white">GITHUB</a>
     </div>
 
@@ -274,26 +274,19 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ once: true, offset: 50, duration: 600 });
-
-        function toggleNav() {
-            document.getElementById('mobile-nav').classList.toggle('open');
-        }
-
+        function toggleNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
         function toggleCustom() {
             const isCustom = document.getElementById('preset').value === 'custom';
             const el = document.getElementById('custom-dims');
             el.classList.toggle('hidden', !isCustom);
             el.classList.toggle('grid', isCustom);
         }
-
         document.getElementById('app').addEventListener('submit', async (e) => {
             e.preventDefault();
             const l = document.getElementById('loader');
             const r = document.getElementById('result');
-
             l.style.display = 'grid';
             r.classList.add('hidden');
-
             try {
                 const res = await fetch('/api/screenshot', {
                     method: 'POST',
@@ -305,20 +298,13 @@
                         customHeight: document.getElementById('ch').value
                     })
                 });
-
                 const data = await res.json();
                 if (!data.status) throw new Error(data.message);
-
                 document.getElementById('ss-preview').src = data.data.url;
                 document.getElementById('dl-btn').href = data.data.url;
                 document.getElementById('view-btn').href = data.data.url;
                 r.classList.remove('hidden');
-
-            } catch (err) {
-                alert('Execution Error: ' + err.message);
-            } finally {
-                l.style.display = 'none';
-            }
+            } catch (err) { alert('Execution Error: ' + err.message); } finally { l.style.display = 'none'; }
         });
     </script>
 </body>
