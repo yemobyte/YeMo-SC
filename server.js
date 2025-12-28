@@ -110,20 +110,19 @@ app.post('/api/screenshot', async (req, res) => {
             targetUrl = `http://${url}`;
         }
 
+        let navigationFailed = false;
         try {
-            await page.goto(targetUrl, { waitUntil: 'load', timeout: 30000 });
+            await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
         } catch (gotoError) {
+            navigationFailed = true;
             if (gotoError.message.includes('ERR_SSL_PROTOCOL_ERROR') && targetUrl.startsWith('https://')) {
                 try {
                     const fallbackUrl = targetUrl.replace('https://', 'http://');
-                    await page.goto(fallbackUrl, { waitUntil: 'load', timeout: 30000 });
+                    await page.goto(fallbackUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+                    navigationFailed = false;
                 } catch (fallbackError) {
                 }
             }
-        }
-
-        if (page.isClosed()) {
-            throw new Error('Page was closed unexpectedly');
         }
 
         const d = new Date();
@@ -133,16 +132,25 @@ app.post('/api/screenshot', async (req, res) => {
         const filepath = path.join(filesDir, filename);
 
         try {
-            await page.screenshot({ path: filepath, fullPage: true });
+            // Use fullPage only if navigation was successful; error pages/refused connections often crash on fullPage
+            await page.screenshot({
+                path: filepath,
+                fullPage: !navigationFailed
+            });
         } catch (screenshotError) {
-            throw new Error(`Failed to capture: ${screenshotError.message}`);
+            // Final fallback: try a standard viewport screenshot if fullPage failed or page is acting up
+            try {
+                await page.screenshot({ path: filepath, fullPage: false });
+            } catch (finalError) {
+                throw new Error(`Critical capture failure: ${finalError.message}`);
+            }
         }
 
         await browser.close();
 
         res.json({
             status: true,
-            message: "Screenshot success",
+            message: navigationFailed ? "Captured (Site Unreachable)" : "Screenshot success",
             data: {
                 filename,
                 url: `${req.protocol}://${req.get('host')}/files/${filename}`,
