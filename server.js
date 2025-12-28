@@ -70,9 +70,15 @@ const devices = {
 };
 
 app.post('/api/screenshot', async (req, res) => {
-    const { url, deviceType, customWidth, customHeight, delay } = req.body;
+    const { url, deviceType, customWidth, customHeight, delay, format } = req.body;
 
     if (!url) return res.status(400).json({ status: false, message: 'URL required' });
+
+    const outputFormat = (format || 'png').toLowerCase();
+    const validFormats = ['png', 'jpeg', 'pdf'];
+    if (!validFormats.includes(outputFormat)) {
+        return res.status(400).json({ status: false, message: 'Invalid format. Use png, jpeg, or pdf.' });
+    }
 
     let viewport = devices[deviceType];
     if (deviceType === 'custom') {
@@ -123,8 +129,7 @@ app.post('/api/screenshot', async (req, res) => {
             }
         }
 
-        const d = new Date();
-        const filename = `screenshot-${Date.now()}.png`;
+        const filename = `capture-${Date.now()}.${outputFormat}`;
         const filepath = path.join(filesDir, filename);
 
         let userDelay = parseInt(delay) || 5;
@@ -138,16 +143,22 @@ app.post('/api/screenshot', async (req, res) => {
 
         let captureSuccess = true;
         try {
-            await page.screenshot({
-                path: filepath,
-                fullPage: navigationFailed ? false : true
-            });
-        } catch (screenshotError) {
-            try {
-                await page.screenshot({ path: filepath, fullPage: false });
-            } catch (finalError) {
-                captureSuccess = false;
+            if (outputFormat === 'pdf') {
+                await page.pdf({
+                    path: filepath,
+                    format: 'A4',
+                    printBackground: true
+                });
+            } else {
+                await page.screenshot({
+                    path: filepath,
+                    fullPage: navigationFailed ? false : true,
+                    type: outputFormat === 'jpeg' ? 'jpeg' : 'png',
+                    quality: outputFormat === 'jpeg' ? 80 : undefined
+                });
             }
+        } catch (screenshotError) {
+            captureSuccess = false;
         }
 
         await browser.close();
@@ -155,14 +166,15 @@ app.post('/api/screenshot', async (req, res) => {
         if (!captureSuccess) {
             return res.json({
                 status: false,
-                message: "Target unreachable or browser crash",
+                message: "Capture sequence failed",
                 customError: true
             });
         }
 
         res.json({
             status: true,
-            message: navigationFailed ? "Captured (Site Offline)" : "Screenshot success",
+            format: outputFormat,
+            message: navigationFailed ? "Captured (Site Offline)" : "Capture Success",
             data: {
                 filename,
                 url: `${req.protocol}://${req.get('host')}/files/${filename}`,

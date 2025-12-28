@@ -151,8 +151,8 @@
                     <span class="method-badge method-post w-fit">POST</span>
                     <code class="text-xl sm:text-3xl font-black break-all">/api/screenshot</code>
                 </div>
-                <p class="mb-8 font-bold text-base sm:text-lg text-gray-700">Captures a screenshot of any URL or IP
-                    address. Supports standard or high-resolution archiving.</p>
+                <p class="mb-8 font-bold text-base sm:text-lg text-gray-700">Multi-format web archiving system. Supports
+                    PNG, JPEG, and PDF output formats.</p>
                 <div class="table-container mb-4">
                     <table>
                         <thead class="bg-brand-yellow text-black border-b-4 border-black font-black uppercase text-xs">
@@ -171,6 +171,12 @@
                                 <td class="p-3">Full URL or IP (e.g., http://1.1.1.1)</td>
                             </tr>
                             <tr class="border-b-2 border-black">
+                                <td class="p-3">format</td>
+                                <td class="p-3 text-gray-500">String</td>
+                                <td class="p-3 text-gray-400">NO</td>
+                                <td class="p-3">png, jpeg, pdf (Default: png)</td>
+                            </tr>
+                            <tr class="border-b-2 border-black">
                                 <td class="p-3">delay</td>
                                 <td class="p-3 text-gray-500">Integer</td>
                                 <td class="p-3 text-gray-400">NO</td>
@@ -182,14 +188,8 @@
                                 <td class="p-3 text-gray-400">NO</td>
                                 <td class="p-3">desktop, iphone-14, pixel-7, custom</td>
                             </tr>
-                            <tr class="border-b-2 border-black">
-                                <td class="p-3">customWidth</td>
-                                <td class="p-3 text-gray-500">Int</td>
-                                <td class="p-3 text-gray-400">COND</td>
-                                <td class="p-3">Required if "custom"</td>
-                            </tr>
                             <tr>
-                                <td class="p-3">customHeight</td>
+                                <td class="p-3">customWidth</td>
                                 <td class="p-3 text-gray-500">Int</td>
                                 <td class="p-3 text-gray-400">COND</td>
                                 <td class="p-3">Required if "custom"</td>
@@ -205,12 +205,12 @@
             <div class="grid lg:grid-cols-2 gap-8">
                 <div data-aos="zoom-in" class="w-full overflow-hidden">
                     <div class="flex items-center gap-3 mb-3"><i class="fas fa-terminal text-2xl text-gray-500"></i>
-                        <h3 class="font-bold text-xl uppercase">cURL</h3>
+                        <h3 class="font-bold text-xl uppercase">cURL (PDF Export)</h3>
                     </div>
                     <div class="code-block p-4">
                         <pre><code class="language-bash">curl -X POST http://your-app/api/screenshot \
 -H "Content-Type: application/json" \
--d '{"url":"http://google.com", "delay": 10}'</code></pre>
+-d '{"url":"http://google.com", "format": "pdf"}'</code></pre>
                     </div>
                 </div>
                 <div data-aos="zoom-in" data-aos-delay="100" class="w-full overflow-hidden">
@@ -221,8 +221,9 @@
                         <pre><code class="language-javascript">fetch('/api/screenshot', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
+  body: JSON.stringify({ 
     url: 'http://example.com',
+    format: 'png',
     delay: 5
   })
 });</code></pre>
@@ -236,7 +237,7 @@
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/api/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ once: true, duration: 600 }); function toggleNav() { document.getElementById('mobile-nav').classList.toggle('open'); }</script>
 </body>
