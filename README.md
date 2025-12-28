@@ -1,79 +1,107 @@
-YEOSHOT - HIGH PERFORMANCE WEB ARCHIVER
+# YeMoSHOT
 
-YeMoSHOT is a web-based tool designed to capture high-quality screenshots of websites using a headless browser engine. It provides a user-friendly interface with various device viewports and a REST API for developers.
+**HIGH-PERFORMANCE WEB ARCHIVING INTERFACE**
 
-TABLE OF CONTENTS
-1. Features
-2. Prerequisites
-3. Installation
-4. Usage
-5. API Reference
-6. License
+> A professional-grade, Node.js-based screenshot automation tool utilizing Puppeteer for high-fidelity rendering. Designed with a Neo-Brutalist aesthetic and built for speed, reliability, and ease of integration.
 
-FEATURES
-- Capture full-page screenshots of any public URL.
-- Predefined viewports for Desktop, MacBook, iPhone, Pixel, and Tablets.
-- Custom viewport dimensions support.
-- Automatic file cleanup (screenshots are deleted after 24 hours).
-- Responsive Neo-Brutalist user interface.
-- RESTful API endpoint for programmatic access.
+---
 
-PREREQUISITES
-- Node.js (v14 or higher)
-- NPM (Node Package Manager)
-- A stable internet connection for the headless browser to fetch pages.
+## SYSTEM OVERVIEW
 
-INSTALLATION
-1. Clone the repository:
-   git clone https://github.com/yemobyte/YeMo-SC.git
+YeMoSHOT offers a robust solution for developers needing programmable website captures. It features a responsive web GUI for manual use and a RESTful API for automated workflows.
 
-2. Navigate to the project directory:
-   cd YeMo-SC
+### KEY CAPABILITIES
 
-3. Install the dependencies:
-   npm install
+*   **Native API Integration**: Simple JSON-based REST endpoints.
+*   **High-Resolution Rendering**: Powered by Chrome/Puppeteer for pixel-perfect results.
+*   **Multi-Device Simulation**: Viewports for Desktop (1920x1080), MacBook Pro, iPhone 14, Pixel 7, and more.
+*   **Custom Viewports**: Define arbitrary width and height dimensions on the fly.
+*   **Auto-Maintenance**: Self-cleaning file storage (24-hour retention policy).
+*   **Responsive GUI**: Optimized Neo-Brutalist interface for all screen sizes.
 
-USAGE
-1. Start the server:
-   node server.js
+---
 
-2. Open your web browser and navigate to:
-   http://localhost:3000
+## DEPLOYMENT
 
-3. Enter a URL, select a device preset, and click "Run Capture Sequence".
+### PREREQUISITES
 
-API REFERENCE
+*   **Node.js**: v14.x or higher
+*   **NPM**: v6.x or higher
+*   **OS**: Windows, Linux, or macOS
 
-Endpoint: POST /api/screenshot
+### INSTALLATION SCRIPT
 
-Headers:
-  Content-Type: application/json
+```bash
+# 1. Clone the repository
+git clone https://github.com/yemobyte/YeMo-SC.git
 
-Body Parameters:
-  - url (string): The target URL (e.g., "https://example.com").
-  - deviceType (string): "desktop", "macbook-pro", "iphone-14", "pixel-7", or "custom".
-  - customWidth (number): Required if deviceType is "custom".
-  - customHeight (number): Required if deviceType is "custom".
+# 2. Navigate to directory
+cd YeMo-SC
 
-Example Request (cURL):
-  curl -X POST http://localhost:3000/api/screenshot \
-  -H "Content-Type: application/json" \
-  -d '{"url": "https://google.com", "deviceType": "iphone-14"}'
+# 3. Install dependencies
+npm install
 
-Example Response:
-  {
-    "status": true,
-    "message": "Screenshot success",
-    "data": {
-      "filename": "screenshot-27-12-2024-10-00-00.png",
-      "url": "http://localhost:3000/files/screenshot-27-12-2024-10-00-00.png",
-      "expires": "24 hours"
-    }
+# 4. Initialize server
+node server.js
+```
+
+> The application will initialize on `http://localhost:3000`
+
+---
+
+## USAGE GUIDE
+
+### WEB INTERFACE
+1.  Access `http://localhost:3000`.
+2.  Input the target **URL** (http/https).
+3.  Select a **Viewport Mode** (Desktop, Mobile, or Custom).
+4.  Execute capture.
+
+### API INTEGRATION
+
+**Endpoint**: `POST /api/screenshot`
+
+**Header**: `Content-Type: application/json`
+
+#### REQUEST PAYLOAD
+
+```json
+{
+  "url": "https://www.github.com",
+  "deviceType": "custom",
+  "customWidth": 1920,
+  "customHeight": 1080
+}
+```
+
+#### RESPONSE OBJECT
+
+```json
+{
+  "status": true,
+  "message": "Screenshot success",
+  "data": {
+    "filename": "screenshot-27-12-2024-10-00-00.png",
+    "url": "http://localhost:3000/files/screenshot-27-12-2024-10-00-00.png",
+    "expires": "24 hours"
   }
+}
+```
 
-LICENSE
-This project is licensed under the GNU General Public License v3.0.
-See the LICENSE file for the full text.
+#### DEVICE PRESETS
+*   `desktop`
+*   `macbook-pro`
+*   `iphone-14`
+*   `pixel-7`
+*   `custom` (requires `customWidth` & `customHeight`)
 
-COPYRIGHT
-Copyright (C) 2024 YeMoByte.
+---
+
+## LICENSE
+
+**GNU GENERAL PUBLIC LICENSE Version 3**
+
+Copyright (C) 2025 **YeMo**  
+https://github.com/yemobyte
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.
