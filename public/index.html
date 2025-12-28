@@ -198,15 +198,22 @@
                         <label class="block font-black text-xs uppercase mb-2">Target Website URL</label>
                         <input type="text" id="url" class="neo-input" placeholder="http://..." required>
                     </div>
-                    <div>
-                        <label class="block font-black text-xs uppercase mb-2">Viewport Mode</label>
-                        <select id="preset" class="neo-input cursor-pointer" onchange="toggleCustom()">
-                            <option value="desktop">Standard Desktop</option>
-                            <option value="macbook-pro">MacBook Pro</option>
-                            <option value="iphone-14">iPhone 14</option>
-                            <option value="pixel-7">Google Pixel 7</option>
-                            <option value="custom">Custom Dimensions</option>
-                        </select>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block font-black text-xs uppercase mb-2">Viewport Mode</label>
+                            <select id="preset" class="neo-input cursor-pointer" onchange="toggleCustom()">
+                                <option value="desktop">Standard Desktop</option>
+                                <option value="macbook-pro">MacBook Pro</option>
+                                <option value="iphone-14">iPhone 14</option>
+                                <option value="pixel-7">Google Pixel 7</option>
+                                <option value="custom">Custom Dimensions</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-black text-xs uppercase mb-2">Custom Delay (Seconds)</label>
+                            <input type="number" id="delay" class="neo-input" placeholder="5" min="0" max="30"
+                                value="5">
+                        </div>
                     </div>
                     <div id="custom-dims" class="hidden grid-cols-2 gap-4">
                         <input type="number" id="cw" class="neo-input" placeholder="Width (px)">
@@ -276,7 +283,8 @@
                         url: document.getElementById('url').value,
                         deviceType: document.getElementById('preset').value,
                         customWidth: document.getElementById('cw').value,
-                        customHeight: document.getElementById('ch').value
+                        customHeight: document.getElementById('ch').value,
+                        delay: document.getElementById('delay').value
                     })
                 });
                 const data = await res.json();

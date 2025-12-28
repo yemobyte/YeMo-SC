@@ -70,7 +70,7 @@ const devices = {
 };
 
 app.post('/api/screenshot', async (req, res) => {
-    const { url, deviceType, customWidth, customHeight } = req.body;
+    const { url, deviceType, customWidth, customHeight, delay } = req.body;
 
     if (!url) return res.status(400).json({ status: false, message: 'URL required' });
 
@@ -127,7 +127,11 @@ app.post('/api/screenshot', async (req, res) => {
         const filename = `screenshot-${Date.now()}.png`;
         const filepath = path.join(filesDir, filename);
 
-        const waitTime = navigationFailed ? 0 : 5000;
+        let userDelay = parseInt(delay) || 5;
+        if (userDelay < 0) userDelay = 0;
+        if (userDelay > 30) userDelay = 30;
+
+        const waitTime = navigationFailed ? 0 : userDelay * 1000;
         if (waitTime > 0) {
             await new Promise(resolve => setTimeout(resolve, waitTime));
         }

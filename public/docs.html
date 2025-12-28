@@ -171,6 +171,12 @@
                                 <td class="p-3">Full URL or IP (e.g., http://1.1.1.1)</td>
                             </tr>
                             <tr class="border-b-2 border-black">
+                                <td class="p-3">delay</td>
+                                <td class="p-3 text-gray-500">Integer</td>
+                                <td class="p-3 text-gray-400">NO</td>
+                                <td class="p-3">Wait time in seconds (Default: 5, Max: 30)</td>
+                            </tr>
+                            <tr class="border-b-2 border-black">
                                 <td class="p-3">deviceType</td>
                                 <td class="p-3 text-gray-500">String</td>
                                 <td class="p-3 text-gray-400">NO</td>
@@ -204,7 +210,7 @@
                     <div class="code-block p-4">
                         <pre><code class="language-bash">curl -X POST http://your-app/api/screenshot \
 -H "Content-Type: application/json" \
--d '{"url":"http://157.230.33.80:3000"}'</code></pre>
+-d '{"url":"http://google.com", "delay": 10}'</code></pre>
                     </div>
                 </div>
                 <div data-aos="zoom-in" data-aos-delay="100" class="w-full overflow-hidden">
@@ -215,8 +221,9 @@
                         <pre><code class="language-javascript">fetch('/api/screenshot', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ 
-    url: 'http://example.com'
+  body: JSON.stringify({
+    url: 'http://example.com',
+    delay: 5
   })
 });</code></pre>
                     </div>
