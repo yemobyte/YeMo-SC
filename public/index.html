@@ -246,12 +246,25 @@
                         <div>
                             <label class="block font-black text-xs uppercase mb-2">Device Viewport</label>
                             <select id="preset" class="neo-input cursor-pointer" onchange="updateUI()">
-                                <option value="desktop">Standard Desktop (1920x1080)</option>
-                                <option value="macbook-pro">MacBook Pro (1728x1117)</option>
-                                <option value="macos-light">macOS Safari Light</option>
-                                <option value="macos-dark">macOS Safari Dark</option>
-                                <option value="iphone-14">iPhone 14 (390x844)</option>
-                                <option value="pixel-7">Google Pixel 7 (412x915)</option>
+                                <optgroup label="Desktops & Laptops">
+                                    <option value="desktop">Standard Desktop (1920x1080)</option>
+                                    <option value="macbook-pro">MacBook Pro (1728x1117)</option>
+                                    <option value="win-11">Windows 11 Setup (1920x1080)</option>
+                                </optgroup>
+                                <optgroup label="macOS Specialized Frames">
+                                    <option value="macos-light">macOS Safari Light (Editable Res)</option>
+                                    <option value="macos-dark">macOS Safari Dark (Editable Res)</option>
+                                </optgroup>
+                                <optgroup label="iOS Devices">
+                                    <option value="iphone-15-pro">iPhone 15 Pro</option>
+                                    <option value="iphone-14">iPhone 14</option>
+                                    <option value="iphone-13-mini">iPhone 13 Mini</option>
+                                </optgroup>
+                                <optgroup label="Android Devices">
+                                    <option value="samsung-s23-ultra">Samsung S23 Ultra</option>
+                                    <option value="samsung-s22">Samsung S22</option>
+                                    <option value="pixel-7-pro">Google Pixel 7 Pro</option>
+                                </optgroup>
                                 <option value="custom">Custom Dimensions</option>
                             </select>
                         </div>
@@ -336,10 +349,15 @@
         const deviceData = {
             'desktop': { w: 1920, h: 1080 },
             'macbook-pro': { w: 1728, h: 1117 },
-            'iphone-14': { w: 390, h: 844 },
-            'pixel-7': { w: 412, h: 915 },
             'macos-light': { w: 1440, h: 900 },
-            'macos-dark': { w: 1440, h: 900 }
+            'macos-dark': { w: 1440, h: 900 },
+            'win-11': { w: 1920, h: 1080 },
+            'iphone-15-pro': { w: 393, h: 852 },
+            'iphone-14': { w: 390, h: 844 },
+            'iphone-13-mini': { w: 375, h: 812 },
+            'samsung-s23-ultra': { w: 384, h: 854 },
+            'samsung-s22': { w: 360, h: 780 },
+            'pixel-7-pro': { w: 412, h: 892 }
         };
 
         function updateUI() {
@@ -347,21 +365,23 @@
             const fullPage = document.getElementById('fullPage').checked;
             const cw = document.getElementById('cw');
             const ch = document.getElementById('ch');
+            const isMacOS = preset.startsWith('macos');
 
             if (preset !== 'custom') {
                 cw.value = deviceData[preset].w;
-                cw.readOnly = true;
-                cw.classList.add('bg-gray-100');
+                cw.readOnly = !isMacOS;
+                cw.classList.toggle('bg-gray-100', !isMacOS);
+
                 if (!fullPage) {
                     ch.value = deviceData[preset].h;
-                    ch.readOnly = true;
-                    ch.classList.add('bg-gray-100');
+                    ch.readOnly = !isMacOS;
+                    ch.classList.toggle('bg-gray-100', !isMacOS);
                 }
             } else {
                 cw.readOnly = false;
                 cw.classList.remove('bg-gray-100');
                 if (!fullPage) {
-                    if (ch.value === 'AUTO') ch.value = '1080'; // Default custom height if AUTO was set
+                    if (ch.value === 'AUTO') ch.value = '1080';
                     ch.readOnly = false;
                     ch.classList.remove('bg-gray-100');
                 }

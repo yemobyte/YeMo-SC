@@ -78,7 +78,12 @@ const devices = {
     'pixel-7': { width: 412, height: 915, isMobile: true },
     'generic-android': { width: 360, height: 640, isMobile: true },
     'macos-light': { width: 1440, height: 900 },
-    'macos-dark': { width: 1440, height: 900 }
+    'macos-dark': { width: 1440, height: 900 },
+    'win-11': { width: 1920, height: 1080 },
+    'iphone-15-pro': { width: 393, height: 852, isMobile: true },
+    'iphone-13-mini': { width: 375, height: 812, isMobile: true },
+    'samsung-s23-ultra': { width: 384, height: 854, isMobile: true },
+    'pixel-7-pro': { width: 412, height: 892, isMobile: true }
 };
 
 app.post('/api/screenshot', async (req, res) => {
