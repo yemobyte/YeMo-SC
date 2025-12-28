@@ -22,6 +22,58 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// Rate Limiting Logic
+const requestCounts = new Map();
+const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
+const RATE_LIMIT_MAX = 100; // 100 requests
+const BAN_DURATION = 5 * 60 * 1000; // 5 minutes
+
+app.use('/api', (req, res, next) => {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const now = Date.now();
+
+    if (!requestCounts.has(ip)) {
+        requestCounts.set(ip, { count: 1, startTime: now, banUntil: 0 });
+        return next();
+    }
+
+    const data = requestCounts.get(ip);
+
+    // Check if banned
+    if (now < data.banUntil) {
+        const remainingSeconds = Math.ceil((data.banUntil - now) / 1000);
+        return res.status(429).json({
+            status: false,
+            message: `Rate limit exceeded. Banned for ${remainingSeconds}s.`,
+            customError: true
+        });
+    }
+
+    // Reset window if expired
+    if (now - data.startTime > RATE_LIMIT_WINDOW) {
+        data.count = 1;
+        data.startTime = now;
+        data.banUntil = 0;
+        requestCounts.set(ip, data);
+        return next();
+    }
+
+    // Increment and check limit
+    data.count++;
+    if (data.count > RATE_LIMIT_MAX) {
+        data.banUntil = now + BAN_DURATION;
+        requestCounts.set(ip, data);
+        return res.status(429).json({
+            status: false,
+            message: 'Rate limit exceeded (100/5min). Banned for 5 minutes.',
+            customError: true
+        });
+    }
+
+    requestCounts.set(ip, data);
+    next();
+});
+
 app.get('/docs', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'docs.html'));
 });
