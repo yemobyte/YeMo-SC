@@ -36,13 +36,14 @@
             background-color: #F8F9FA;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            width: 100%;
         }
 
         .code-block {
             border: 3px solid black;
             box-shadow: 6px 6px 0px 0px black;
             background: #2d2d2d;
-            max-width: 100%;
+            width: 100%;
             overflow-x: auto;
         }
 
@@ -50,8 +51,10 @@
             margin: 0 !important;
             border-radius: 0 !important;
             background: transparent !important;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
 
         .method-badge {
@@ -60,6 +63,7 @@
             color: white;
             padding: 4px 10px;
             border: 2px solid black;
+            text-transform: uppercase;
         }
 
         .method-post {
@@ -75,33 +79,46 @@
             transform: translateX(0);
         }
 
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 3px solid black;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
         @media (max-width: 640px) {
+            .text-4xl {
+                font-size: 1.875rem;
+            }
+
             .text-6xl {
                 font-size: 2.5rem;
             }
 
-            .text-3xl {
-                font-size: 1.5rem;
-            }
-
-            .p-8 {
-                padding: 1.25rem;
+            main {
+                padding-top: 5rem;
             }
         }
     </style>
 </head>
 
-<body class="text-black font-sans">
-    <nav class="fixed top-0 w-full z-40 bg-white border-b-4 border-black py-4 px-6">
+<body class="text-black font-sans w-full">
+    <nav class="fixed top-0 w-full z-50 bg-white border-b-4 border-black py-4 px-4 sm:px-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2 group">
+            <a href="/" class="flex items-center gap-2 group shrink-0">
                 <div
-                    class="w-10 h-10 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-black group-hover:bg-brand-yellow group-hover:text-black transition-colors">
+                    class="w-8 h-8 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center font-black text-lg sm:text-xl border-2 border-black group-hover:bg-brand-yellow group-hover:text-black transition-colors">
                     Y</div>
                 <div class="flex items-center">
-                    <span class="font-black text-2xl tracking-tighter uppercase">YeMo</span>
+                    <span class="font-black text-xl sm:text-2xl tracking-tighter uppercase">YeMo</span>
                     <span
-                        class="font-black text-2xl tracking-tighter bg-blue-600 text-white px-2 ml-1 transform -skew-x-6 border-b-4 border-black uppercase">Docs</span>
+                        class="font-black text-xl sm:text-2xl tracking-tighter bg-blue-600 text-white px-2 ml-1 transform -skew-x-6 border-b-4 border-black uppercase">Docs</span>
                 </div>
             </a>
             <div class="hidden md:flex gap-8 font-bold items-center">
@@ -109,67 +126,67 @@
                 <a href="https://github.com/yemobyte/YeMo-SC" target="_blank"
                     class="hover:text-blue-600 transition-colors">GITHUB</a>
             </div>
-            <button onclick="toggleNav()" class="md:hidden text-2xl flex items-center focus:outline-none"><i
+            <button onclick="toggleNav()" class="md:hidden text-2xl flex items-center shrink-0 focus:outline-none"><i
                     class="fas fa-bars"></i></button>
         </div>
     </nav>
 
     <div id="mobile-nav"
-        class="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center gap-10 text-4xl font-black border-l-4 border-black">
-        <button onclick="toggleNav()" class="absolute top-6 right-6 text-5xl">&times;</button>
+        class="fixed inset-0 z-[60] bg-white flex flex-col items-center justify-center gap-10 text-4xl font-black border-l-4 border-black">
+        <button onclick="toggleNav()" class="absolute top-6 right-6 text-5xl focus:outline-none">&times;</button>
         <a href="/" onclick="toggleNav()">HOME</a>
         <a href="https://github.com/yemobyte/YeMo-SC" onclick="toggleNav()">GITHUB</a>
     </div>
 
-    <main class="max-w-6xl mx-auto pt-32 pb-20 px-4 md:px-6">
-        <header data-aos="fade-down" class="mb-16 text-center lg:text-left">
-            <h1 class="text-4xl md:text-6xl font-black uppercase mb-4">Core API Reference</h1>
-            <p class="text-xl font-bold border-l-4 border-brand-yellow pl-4 inline-block">Native HTTP Integration Guide
-            </p>
+    <main class="max-w-6xl mx-auto pt-24 pb-20 px-4 sm:px-6">
+        <header data-aos="fade-down" class="mb-12 text-center lg:text-left">
+            <h1 class="text-4xl sm:text-6xl font-black uppercase mb-4 leading-none">API Reference</h1>
+            <p class="text-lg sm:text-xl font-bold border-l-4 border-brand-yellow pl-4 inline-block">Native HTTP
+                Integration</p>
         </header>
 
-        <section data-aos="fade-up" class="mb-20">
-            <div class="bg-white border-4 border-black p-5 md:p-8 shadow-hard">
+        <section data-aos="fade-up" class="mb-16">
+            <div class="bg-white border-4 border-black p-4 sm:p-8 shadow-hard w-full overflow-hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
                     <span class="method-badge method-post w-fit">POST</span>
-                    <code class="text-xl md:text-3xl font-black break-all">/api/screenshot</code>
+                    <code class="text-xl sm:text-3xl font-black break-all">/api/screenshot</code>
                 </div>
-                <p class="mb-8 font-bold text-lg text-gray-700">Initiate a screenshot capture sequence via headless
-                    engine. Supports HTTP, HTTPS, and IP addresses.</p>
-                <div class="overflow-x-auto border-4 border-black mb-8">
-                    <table class="w-full text-left bg-white min-w-[700px]">
-                        <thead class="bg-brand-yellow text-black border-b-4 border-black">
+                <p class="mb-8 font-bold text-base sm:text-lg text-gray-700">Captures a screenshot of any URL or IP
+                    address, supporting standard or custom resolutions.</p>
+                <div class="table-container mb-4">
+                    <table>
+                        <thead class="bg-brand-yellow text-black border-b-4 border-black font-black uppercase text-xs">
                             <tr>
-                                <th class="p-4 uppercase font-black">Parameter</th>
-                                <th class="p-4 uppercase font-black">Type</th>
-                                <th class="p-4 uppercase font-black">Required</th>
-                                <th class="p-4 uppercase font-black">Description</th>
+                                <th class="p-3 text-left">Parameter</th>
+                                <th class="p-3 text-left">Type</th>
+                                <th class="p-3 text-left">Required</th>
+                                <th class="p-3 text-left">Description</th>
                             </tr>
                         </thead>
-                        <tbody class="font-mono font-bold text-sm">
-                            <tr class="border-b-2 border-black hover:bg-gray-50">
-                                <td class="p-4">url</td>
-                                <td class="p-4 text-gray-500">String</td>
-                                <td class="p-4 text-blue-600">YES</td>
-                                <td class="p-4">Absolute URL or IP address</td>
+                        <tbody class="font-mono font-bold text-[11px] sm:text-sm">
+                            <tr class="border-b-2 border-black">
+                                <td class="p-3">url</td>
+                                <td class="p-3 text-gray-500">String</td>
+                                <td class="p-3 text-blue-600">YES</td>
+                                <td class="p-3">Full URL or IP (e.g., http://1.1.1.1)</td>
                             </tr>
-                            <tr class="border-b-2 border-black hover:bg-gray-50">
-                                <td class="p-4">deviceType</td>
-                                <td class="p-4 text-gray-500">String</td>
-                                <td class="p-4 text-gray-400">NO</td>
-                                <td class="p-4">desktop, macbook-pro, iphone-14, pixel-7, custom</td>
+                            <tr class="border-b-2 border-black">
+                                <td class="p-3">deviceType</td>
+                                <td class="p-3 text-gray-500">String</td>
+                                <td class="p-3 text-gray-400">NO</td>
+                                <td class="p-3">desktop, iphone-14, custom</td>
                             </tr>
-                            <tr class="border-b-2 border-black hover:bg-gray-50">
-                                <td class="p-4">customWidth</td>
-                                <td class="p-4 text-gray-500">Integer</td>
-                                <td class="p-4 text-gray-400">COND</td>
-                                <td class="p-4">Required if deviceType is "custom"</td>
+                            <tr class="border-b-2 border-black">
+                                <td class="p-3">customWidth</td>
+                                <td class="p-3 text-gray-500">Int</td>
+                                <td class="p-3 text-gray-400">COND</td>
+                                <td class="p-3">Required if "custom"</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-4">customHeight</td>
-                                <td class="p-4 text-gray-500">Integer</td>
-                                <td class="p-4 text-gray-400">COND</td>
-                                <td class="p-4">Required if deviceType is "custom"</td>
+                            <tr>
+                                <td class="p-3">customHeight</td>
+                                <td class="p-3 text-gray-500">Int</td>
+                                <td class="p-3 text-gray-400">COND</td>
+                                <td class="p-3">Required if "custom"</td>
                             </tr>
                         </tbody>
                     </table>
@@ -177,58 +194,42 @@
             </div>
         </section>
 
-        <section class="space-y-12">
-            <h2 class="text-3xl md:text-4xl font-black uppercase mb-8" data-aos="fade-right">Implementation Examples
-            </h2>
-            <div class="grid lg:grid-cols-2 gap-10">
-                <div data-aos="fade-up">
-                    <div class="flex items-center gap-3 mb-3"><i class="fab fa-js text-3xl text-yellow-500"></i>
-                        <h3 class="font-bold text-2xl uppercase">Javascript</h3>
+        <section class="space-y-12 w-full">
+            <h2 class="text-3xl font-black uppercase mb-8" data-aos="fade-right">Usage Examples</h2>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div data-aos="zoom-in" class="w-full overflow-hidden">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-terminal text-2xl text-gray-500"></i>
+                        <h3 class="font-bold text-xl uppercase">cURL</h3>
                     </div>
-                    <div class="code-block">
-                        <pre><code class="language-javascript">const capture = async () => {
-  const response = await fetch('/api/screenshot', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: 'http://157.230.33.80:3000', deviceType: 'desktop' })
-  });
-  console.log(await response.json());
-};</code></pre>
-                    </div>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex items-center gap-3 mb-3"><i class="fab fa-python text-3xl text-blue-500"></i>
-                        <h3 class="font-bold text-2xl uppercase">Python</h3>
-                    </div>
-                    <div class="code-block">
-                        <pre><code class="language-python">import requests
-data = {"url": "https://google.com", "deviceType": "macbook-pro"}
-res = requests.post("http://your-app/api/screenshot", json=data)
-print(res.json())</code></pre>
-                    </div>
-                </div>
-                <div data-aos="fade-up" class="lg:col-span-2">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-terminal text-3xl text-gray-500"></i>
-                        <h3 class="font-bold text-2xl uppercase">cURL</h3>
-                    </div>
-                    <div class="code-block">
+                    <div class="code-block p-4">
                         <pre><code class="language-bash">curl -X POST http://your-app/api/screenshot \
-  -H "Content-Type: application/json" \
-  -d '{"url":"http://157.230.33.80:3000", "deviceType":"custom", "customWidth":1920, "customHeight":1080}'</code></pre>
+-H "Content-Type: application/json" \
+-d '{"url":"http://157.230.33.80:3000"}'</code></pre>
+                    </div>
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="100" class="w-full overflow-hidden">
+                    <div class="flex items-center gap-3 mb-3"><i class="fab fa-js text-2xl text-yellow-500"></i>
+                        <h3 class="font-bold text-xl uppercase">Fetch API</h3>
+                    </div>
+                    <div class="code-block p-4">
+                        <pre><code class="language-javascript">fetch('/api/screenshot', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ url: 'http://example.com' })
+});</code></pre>
                     </div>
                 </div>
             </div>
         </section>
     </main>
-    <footer class="text-center font-bold bg-white text-black py-12 border-t-4 border-black mt-20">
-        <p>&copy; 2025 YeMoSHOT System.</p>
+    <footer class="text-center font-bold bg-white text-black py-10 border-t-4 border-black mt-20">
+        <p class="text-sm px-4">&copy; 2025 YeMoSHOT System. Developed by YeMoByte.</p>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ once: true, duration: 800 }); function toggleNav() { document.getElementById('mobile-nav').classList.toggle('open'); }</script>
+    <script>AOS.init({ once: true, duration: 600 }); function toggleNav() { document.getElementById('mobile-nav').classList.toggle('open'); }</script>
 </body>
 
 </html>
