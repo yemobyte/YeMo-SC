@@ -26,7 +26,6 @@ app.get('/docs', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'docs.html'));
 });
 
-// Ensure directories exist
 const publicDir = path.join(__dirname, 'public');
 const filesDir = path.join(publicDir, 'files');
 
@@ -35,7 +34,6 @@ if (!fs.existsSync(publicDir)) {
 }
 if (!fs.existsSync(filesDir)) {
     fs.mkdirSync(filesDir, { recursive: true });
-    // Created directory: /public/files
 }
 
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -109,14 +107,12 @@ app.post('/api/screenshot', async (req, res) => {
 
         let targetUrl = url;
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            // Default to http for IP-like addresses or if no protocol is specified
             targetUrl = `http://${url}`;
         }
 
         try {
             await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 60000 });
         } catch (gotoError) {
-            // If it failed with an SSL error and we were using https, try falling back to http
             if (gotoError.message.includes('ERR_SSL_PROTOCOL_ERROR') && targetUrl.startsWith('https://')) {
                 const fallbackUrl = targetUrl.replace('https://', 'http://');
                 await page.goto(fallbackUrl, { waitUntil: 'networkidle2', timeout: 60000 });
