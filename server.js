@@ -70,7 +70,7 @@ const devices = {
 };
 
 app.post('/api/screenshot', async (req, res) => {
-    const { url, deviceType, customWidth, customHeight, fullPage } = req.body;
+    const { url, deviceType, customWidth, customHeight } = req.body;
 
     if (!url) return res.status(400).json({ status: false, message: 'URL required' });
 
@@ -129,10 +129,9 @@ app.post('/api/screenshot', async (req, res) => {
 
         let captureSuccess = true;
         try {
-            const isFull = fullPage === true || fullPage === 'true';
             await page.screenshot({
                 path: filepath,
-                fullPage: navigationFailed ? false : isFull
+                fullPage: navigationFailed ? false : true
             });
         } catch (screenshotError) {
             try {

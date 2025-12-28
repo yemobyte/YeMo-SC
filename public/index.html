@@ -146,51 +146,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border: 3px solid black;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border: 2px solid black;
-        }
-
-        input:checked+.slider {
-            background-color: #A855F7;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(26px);
-        }
-
         #mobile-nav {
             transform: translateX(100%);
             transition: transform 0.2s;
@@ -243,26 +198,15 @@
                         <label class="block font-black text-xs uppercase mb-2">Target Website URL</label>
                         <input type="text" id="url" class="neo-input" placeholder="http://..." required>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block font-black text-xs uppercase mb-2">Viewport Mode</label>
-                            <select id="preset" class="neo-input cursor-pointer" onchange="toggleCustom()">
-                                <option value="desktop">Standard Desktop</option>
-                                <option value="macbook-pro">MacBook Pro</option>
-                                <option value="iphone-14">iPhone 14</option>
-                                <option value="pixel-7">Google Pixel 7</option>
-                                <option value="custom">Custom Dimensions</option>
-                            </select>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div>
-                                <label class="block font-black text-xs uppercase mb-2">Full Screen Rendering</label>
-                                <label class="switch">
-                                    <input type="checkbox" id="fullPage" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
+                    <div>
+                        <label class="block font-black text-xs uppercase mb-2">Viewport Mode</label>
+                        <select id="preset" class="neo-input cursor-pointer" onchange="toggleCustom()">
+                            <option value="desktop">Standard Desktop</option>
+                            <option value="macbook-pro">MacBook Pro</option>
+                            <option value="iphone-14">iPhone 14</option>
+                            <option value="pixel-7">Google Pixel 7</option>
+                            <option value="custom">Custom Dimensions</option>
+                        </select>
                     </div>
                     <div id="custom-dims" class="hidden grid-cols-2 gap-4">
                         <input type="number" id="cw" class="neo-input" placeholder="Width (px)">
@@ -332,8 +276,7 @@
                         url: document.getElementById('url').value,
                         deviceType: document.getElementById('preset').value,
                         customWidth: document.getElementById('cw').value,
-                        customHeight: document.getElementById('ch').value,
-                        fullPage: document.getElementById('fullPage').checked
+                        customHeight: document.getElementById('ch').value
                     })
                 });
                 const data = await res.json();
