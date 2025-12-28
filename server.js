@@ -22,11 +22,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Rate Limiting Logic
+
 const requestCounts = new Map();
-const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
-const RATE_LIMIT_MAX = 100; // 100 requests
-const BAN_DURATION = 5 * 60 * 1000; // 5 minutes
+const RATE_LIMIT_WINDOW = 5 * 60 * 1000;
+const RATE_LIMIT_MAX = 100;
+const BAN_DURATION = 5 * 60 * 1000;
 
 app.use('/api', (req, res, next) => {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -39,7 +39,6 @@ app.use('/api', (req, res, next) => {
 
     const data = requestCounts.get(ip);
 
-    // Check if banned
     if (now < data.banUntil) {
         const remainingSeconds = Math.ceil((data.banUntil - now) / 1000);
         return res.status(429).json({
@@ -49,7 +48,6 @@ app.use('/api', (req, res, next) => {
         });
     }
 
-    // Reset window if expired
     if (now - data.startTime > RATE_LIMIT_WINDOW) {
         data.count = 1;
         data.startTime = now;
@@ -58,7 +56,6 @@ app.use('/api', (req, res, next) => {
         return next();
     }
 
-    // Increment and check limit
     data.count++;
     if (data.count > RATE_LIMIT_MAX) {
         data.banUntil = now + BAN_DURATION;
