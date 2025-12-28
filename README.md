@@ -25,7 +25,7 @@ YeMoSHOT offers a robust solution for developers needing programmable website ca
 
 ### PREREQUISITES
 
-*   **Node.js**: v14.x or higher
+*   **Node.js**: v20.x or higher
 *   **NPM**: v6.x or higher
 *   **OS**: Windows, Linux, or macOS
 
