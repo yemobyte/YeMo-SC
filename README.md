@@ -1,3 +1,13 @@
+---
+title: YeMoSHOT
+emoji: 📸
+colorFrom: yellow
+colorTo: black
+sdk: docker
+pinned: false
+app_port: 3000
+---
+
 # YeMoSHOT
 
 **HIGH-PERFORMANCE WEB ARCHIVING INTERFACE**
