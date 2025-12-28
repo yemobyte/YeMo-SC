@@ -80,7 +80,7 @@ const devices = {
 };
 
 app.post('/api/screenshot', async (req, res) => {
-    const { url, deviceType, customWidth, customHeight, delay, format } = req.body;
+    const { url, deviceType, customWidth, customHeight, delay, format, fullPage } = req.body;
 
     if (!url) return res.status(400).json({ status: false, message: 'URL required' });
 
@@ -153,6 +153,7 @@ app.post('/api/screenshot', async (req, res) => {
 
         let captureSuccess = true;
         try {
+            const isFull = fullPage === true || fullPage === 'true';
             if (outputFormat === 'pdf') {
                 await page.pdf({
                     path: filepath,
@@ -162,7 +163,7 @@ app.post('/api/screenshot', async (req, res) => {
             } else {
                 await page.screenshot({
                     path: filepath,
-                    fullPage: navigationFailed ? false : true,
+                    fullPage: navigationFailed ? false : isFull,
                     type: outputFormat === 'jpeg' ? 'jpeg' : 'png',
                     quality: outputFormat === 'jpeg' ? 80 : undefined
                 });
