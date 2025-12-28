@@ -245,11 +245,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block font-black text-xs uppercase mb-2">Device Viewport</label>
-                            <select id="preset" class="neo-input cursor-pointer" onchange="toggleCustom()">
-                                <option value="desktop">Standard Desktop</option>
-                                <option value="macbook-pro">MacBook Pro</option>
-                                <option value="iphone-14">iPhone 14</option>
-                                <option value="pixel-7">Google Pixel 7</option>
+                            <select id="preset" class="neo-input cursor-pointer" onchange="updateUI()">
+                                <option value="desktop">Standard Desktop (1920x1080)</option>
+                                <option value="macbook-pro">MacBook Pro (1728x1117)</option>
+                                <option value="iphone-14">iPhone 14 (390x844)</option>
+                                <option value="pixel-7">Google Pixel 7 (412x915)</option>
                                 <option value="custom">Custom Dimensions</option>
                             </select>
                         </div>
@@ -272,13 +272,19 @@
                             <div>
                                 <label class="block font-black text-xs uppercase mb-2">Full Screen Rendering</label>
                                 <label class="switch">
-                                    <input type="checkbox" id="fullPage" checked>
+                                    <input type="checkbox" id="fullPage" onchange="updateUI()" checked>
                                     <span class="slider"></span>
                                 </label>
                             </div>
-                            <div id="custom-dims" class="hidden grid-cols-2 gap-4 flex-1">
-                                <input type="number" id="cw" class="neo-input" placeholder="Width">
-                                <input type="number" id="ch" class="neo-input" placeholder="Height">
+                            <div class="grid grid-cols-2 gap-4 flex-1">
+                                <div>
+                                    <label class="block font-black text-[10px] uppercase mb-1">Width</label>
+                                    <input type="text" id="cw" class="neo-input !py-2 text-center" value="1920">
+                                </div>
+                                <div>
+                                    <label class="block font-black text-[10px] uppercase mb-1">Height</label>
+                                    <input type="text" id="ch" class="neo-input !py-2 text-center" value="AUTO">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -324,12 +330,48 @@
     <script>
         AOS.init({ once: true, duration: 600 });
         function toggleNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
-        function toggleCustom() {
-            const isCustom = document.getElementById('preset').value === 'custom';
-            const el = document.getElementById('custom-dims');
-            el.classList.toggle('hidden', !isCustom);
-            el.classList.toggle('grid', isCustom);
+
+        const deviceData = {
+            'desktop': { w: 1920, h: 1080 },
+            'macbook-pro': { w: 1728, h: 1117 },
+            'iphone-14': { w: 390, h: 844 },
+            'pixel-7': { w: 412, h: 915 }
+        };
+
+        function updateUI() {
+            const preset = document.getElementById('preset').value;
+            const fullPage = document.getElementById('fullPage').checked;
+            const cw = document.getElementById('cw');
+            const ch = document.getElementById('ch');
+
+            if (preset !== 'custom') {
+                cw.value = deviceData[preset].w;
+                cw.readOnly = true;
+                cw.classList.add('bg-gray-100');
+                if (!fullPage) {
+                    ch.value = deviceData[preset].h;
+                    ch.readOnly = true;
+                    ch.classList.add('bg-gray-100');
+                }
+            } else {
+                cw.readOnly = false;
+                cw.classList.remove('bg-gray-100');
+                if (!fullPage) {
+                    if (ch.value === 'AUTO') ch.value = '1080'; // Default custom height if AUTO was set
+                    ch.readOnly = false;
+                    ch.classList.remove('bg-gray-100');
+                }
+            }
+
+            if (fullPage) {
+                ch.value = 'AUTO';
+                ch.readOnly = true;
+                ch.classList.add('bg-gray-100');
+            }
         }
+
+        window.onload = updateUI;
+
         function showToast(msg, color = 'white') {
             const t = document.getElementById('toast');
             t.innerText = msg;
@@ -340,6 +382,7 @@
 
         const dlBtn = document.getElementById('dl-btn');
         let currentFileData = null;
+
         dlBtn.onclick = () => {
             if (currentFileData) {
                 window.location.href = `/download/${currentFileData.filename}`;
@@ -366,7 +409,7 @@
                         url: document.getElementById('url').value,
                         deviceType: document.getElementById('preset').value,
                         customWidth: document.getElementById('cw').value,
-                        customHeight: document.getElementById('ch').value,
+                        customHeight: document.getElementById('ch').value === 'AUTO' ? 0 : document.getElementById('ch').value,
                         delay: document.getElementById('delay').value,
                         format: document.getElementById('format').value,
                         fullPage: document.getElementById('fullPage').checked
