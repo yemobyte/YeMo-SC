@@ -111,14 +111,17 @@ app.post('/api/screenshot', async (req, res) => {
         }
 
         try {
-            await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+            await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
         } catch (gotoError) {
             if (gotoError.message.includes('ERR_SSL_PROTOCOL_ERROR') && targetUrl.startsWith('https://')) {
-                const fallbackUrl = targetUrl.replace('https://', 'http://');
-                await page.goto(fallbackUrl, { waitUntil: 'networkidle2', timeout: 60000 });
-            } else {
-                throw gotoError;
+                try {
+                    const fallbackUrl = targetUrl.replace('https://', 'http://');
+                    await page.goto(fallbackUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+                } catch (fallbackError) {
+                    // Ignore and proceed to screenshot error state
+                }
             }
+            // Proceed to screenshot even on failure (e.g. refused, timeout)
         }
 
         const d = new Date();
