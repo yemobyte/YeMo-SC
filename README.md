@@ -35,9 +35,9 @@ YeMoSHOT offers a robust solution for developers needing programmable website ca
 
 ### PREREQUISITES
 
-*   **Node.js**: v20.x or higher
-*   **NPM**: v6.x or higher
-*   **OS**: Windows, Linux, or macOS
+*   **Node.js**: v18.x or higher (Required)
+*   **NPM**: v9.x or higher
+*   **OS**: Windows, Linux (Debian 12+ recommended), or macOS
 
 ### INSTALLATION SCRIPT
 
@@ -104,6 +104,15 @@ node server.js
 *   `iphone-14`
 *   `pixel-7`
 *   `custom` (requires `customWidth` & `customHeight`)
+
+---
+
+## TROUBLESHOOTING
+
+### SSL Protocol Error
+If you encounter `net::ERR_SSL_PROTOCOL_ERROR` when targeting an IP address (e.g., `157.230.33.80`):
+- **Protocol Mismatch**: Ensure you are using `http://` instead of `https://` if the target server does not have an active SSL certificate.
+- **Port Specifics**: If the site runs on a custom port without SSL, use `http://1.1.1.1:3000`.
 
 ---
 
