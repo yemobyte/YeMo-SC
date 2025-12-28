@@ -1,59 +1,79 @@
 YEOSHOT - HIGH PERFORMANCE WEB ARCHIVER
 
-YeMoSHOT is a robust, Node.js-based web screenshot tool designed for developers and power users. It utilizes a headless browser engine (Puppeteer) to capture high-resolution screenshots of any website. The system features a responsive Neo-Brutalist web interface and a fully documented REST API for seamless integration.
+YeMoSHOT is a web-based tool designed to capture high-quality screenshots of websites using a headless browser engine. It provides a user-friendly interface with various device viewports and a REST API for developers.
+
+TABLE OF CONTENTS
+1. Features
+2. Prerequisites
+3. Installation
+4. Usage
+5. API Reference
+6. License
 
 FEATURES
+- Capture full-page screenshots of any public URL.
+- Predefined viewports for Desktop, MacBook, iPhone, Pixel, and Tablets.
+- Custom viewport dimensions support.
+- Automatic file cleanup (screenshots are deleted after 24 hours).
+- Responsive Neo-Brutalist user interface.
+- RESTful API endpoint for programmatic access.
 
-- High-Speed Rendering: Optimized for fast capture and minimal latency.
-- Responsive Design: Works perfectly on Desktop, Mobile, and Tablets.
-- REST API: Native API endpoint for easy integration with other applications.
-- Auto-Cleanup: Automatically deletes generated files after 24 hours to save storage.
-- Multi-Viewport Support: Preset dimensions for Desktop, MacBook, iPhone, Pixel, and Custom sizes.
+PREREQUISITES
+- Node.js (v14 or higher)
+- NPM (Node Package Manager)
+- A stable internet connection for the headless browser to fetch pages.
 
 INSTALLATION
-
 1. Clone the repository:
    git clone https://github.com/yemobyte/YeMo-SC.git
 
 2. Navigate to the project directory:
    cd YeMo-SC
 
-3. Install dependencies:
+3. Install the dependencies:
    npm install
 
-4. Start the server:
+USAGE
+1. Start the server:
    node server.js
 
-The application will be available at http://localhost:3000.
+2. Open your web browser and navigate to:
+   http://localhost:3000
 
-API DOCUMENTATION
+3. Enter a URL, select a device preset, and click "Run Capture Sequence".
+
+API REFERENCE
 
 Endpoint: POST /api/screenshot
-Content-Type: application/json
 
-Parameters:
-- url (string, required): The absolute URL of the website to capture.
-- deviceType (string, optional): The device viewport preset (e.g., 'desktop', 'iphone-14', 'custom').
-- customWidth (integer, optional): Required if deviceType is 'custom'.
-- customHeight (integer, optional): Required if deviceType is 'custom'.
+Headers:
+  Content-Type: application/json
 
-Response (JSON):
-{
-  "status": true,
-  "message": "Screenshot success",
-  "data": {
-    "filename": "screenshot-DATE-TIME.png",
-    "url": "http://localhost:3000/files/...",
-    "expires": "24 hours"
+Body Parameters:
+  - url (string): The target URL (e.g., "https://example.com").
+  - deviceType (string): "desktop", "macbook-pro", "iphone-14", "pixel-7", or "custom".
+  - customWidth (number): Required if deviceType is "custom".
+  - customHeight (number): Required if deviceType is "custom".
+
+Example Request (cURL):
+  curl -X POST http://localhost:3000/api/screenshot \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://google.com", "deviceType": "iphone-14"}'
+
+Example Response:
+  {
+    "status": true,
+    "message": "Screenshot success",
+    "data": {
+      "filename": "screenshot-27-12-2024-10-00-00.png",
+      "url": "http://localhost:3000/files/screenshot-27-12-2024-10-00-00.png",
+      "expires": "24 hours"
+    }
   }
-}
 
 LICENSE
-
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
-See the LICENSE file for details.
+This project is licensed under the GNU General Public License v3.0.
+See the LICENSE file for the full text.
 
 COPYRIGHT
-
 Copyright (C) 2024 YeMoByte.
-All Rights Reserved.
