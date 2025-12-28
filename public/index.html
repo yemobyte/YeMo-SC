@@ -248,6 +248,8 @@
                             <select id="preset" class="neo-input cursor-pointer" onchange="updateUI()">
                                 <option value="desktop">Standard Desktop (1920x1080)</option>
                                 <option value="macbook-pro">MacBook Pro (1728x1117)</option>
+                                <option value="macos-light">macOS Safari Light</option>
+                                <option value="macos-dark">macOS Safari Dark</option>
                                 <option value="iphone-14">iPhone 14 (390x844)</option>
                                 <option value="pixel-7">Google Pixel 7 (412x915)</option>
                                 <option value="custom">Custom Dimensions</option>
@@ -335,7 +337,9 @@
             'desktop': { w: 1920, h: 1080 },
             'macbook-pro': { w: 1728, h: 1117 },
             'iphone-14': { w: 390, h: 844 },
-            'pixel-7': { w: 412, h: 915 }
+            'pixel-7': { w: 412, h: 915 },
+            'macos-light': { w: 1440, h: 900 },
+            'macos-dark': { w: 1440, h: 900 }
         };
 
         function updateUI() {

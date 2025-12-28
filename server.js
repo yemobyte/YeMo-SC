@@ -76,7 +76,9 @@ const devices = {
     'iphone-se': { width: 375, height: 667, isMobile: true },
     'samsung-s22': { width: 360, height: 780, isMobile: true },
     'pixel-7': { width: 412, height: 915, isMobile: true },
-    'generic-android': { width: 360, height: 640, isMobile: true }
+    'generic-android': { width: 360, height: 640, isMobile: true },
+    'macos-light': { width: 1440, height: 900 },
+    'macos-dark': { width: 1440, height: 900 }
 };
 
 app.post('/api/screenshot', async (req, res) => {
@@ -151,9 +153,75 @@ app.post('/api/screenshot', async (req, res) => {
             await new Promise(resolve => setTimeout(resolve, waitTime));
         }
 
+        const isFull = fullPage === true || fullPage === 'true';
+        const isMacOS = deviceType === 'macos-light' || deviceType === 'macos-dark';
+
+        if (isMacOS && outputFormat !== 'pdf') {
+            await page.evaluate((type) => {
+                const isDark = type === 'macos-dark';
+                const body = document.body;
+                const html = document.documentElement;
+
+                const wrapper = document.createElement('div');
+                wrapper.id = 'yemo-macos-wrapper';
+                wrapper.style.cssText = `
+                    padding: 40px;
+                    background: ${isDark ? '#1a1a1a' : '#f0f0f0'};
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
+                    min-height: 100vh;
+                `;
+
+                const win = document.createElement('div');
+                win.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+                    overflow: hidden;
+                    border: 1px solid ${isDark ? '#333' : '#ccc'};
+                    width: 100%;
+                `;
+
+                const titleBar = document.createElement('div');
+                titleBar.style.cssText = `
+                    height: 32px;
+                    background: ${isDark ? '#333' : '#ebebeb'};
+                    display: flex;
+                    align-items: center;
+                    padding: 0 15px;
+                    border-bottom: 1px solid ${isDark ? '#222' : '#ddd'};
+                `;
+
+                const dots = document.createElement('div');
+                dots.style.display = 'flex';
+                dots.style.gap = '8px';
+                ['#ff5f56', '#ffbd2e', '#27c93f'].forEach(color => {
+                    const dot = document.createElement('div');
+                    dot.style.cssText = `width: 12px; height: 12px; border-radius: 50%; background: ${color}; border: 0.5px solid rgba(0,0,0,0.1);`;
+                    dots.appendChild(dot);
+                });
+                titleBar.appendChild(dots);
+
+                const content = document.createElement('div');
+                content.style.background = 'white';
+
+                while (body.firstChild) {
+                    content.appendChild(body.firstChild);
+                }
+
+                win.appendChild(titleBar);
+                win.appendChild(content);
+                wrapper.appendChild(win);
+                body.appendChild(wrapper);
+
+                html.style.overflow = 'hidden';
+                body.style.margin = '0';
+            }, deviceType);
+        }
+
         let captureSuccess = true;
         try {
-            const isFull = fullPage === true || fullPage === 'true';
             if (outputFormat === 'pdf') {
                 await page.pdf({
                     path: filepath,
@@ -163,7 +231,7 @@ app.post('/api/screenshot', async (req, res) => {
             } else {
                 await page.screenshot({
                     path: filepath,
-                    fullPage: navigationFailed ? false : isFull,
+                    fullPage: (navigationFailed || isMacOS) ? false : isFull,
                     type: outputFormat === 'jpeg' ? 'jpeg' : 'png',
                     quality: outputFormat === 'jpeg' ? 80 : undefined
                 });
