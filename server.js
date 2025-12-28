@@ -1,3 +1,13 @@
+/*
+* YeMoSHOT - Web Archiver
+* Copyright (C) 2024 YeMoByte.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*/
+
 const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require('path');
@@ -25,7 +35,7 @@ if (!fs.existsSync(publicDir)) {
 }
 if (!fs.existsSync(filesDir)) {
     fs.mkdirSync(filesDir, { recursive: true });
-    console.log('Created directory: /public/files');
+    // Created directory: /public/files
 }
 
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -38,7 +48,7 @@ setInterval(() => {
             fs.stat(filePath, (err, stats) => {
                 if (err) return;
                 if (now - stats.mtimeMs > MAX_AGE_MS) {
-                    fs.unlink(filePath, () => console.log(`Deleted old file: ${file}`));
+                    fs.unlink(filePath, () => { });
                 }
             });
         });
@@ -121,7 +131,6 @@ app.post('/api/screenshot', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     if (!fs.existsSync(filesDir)) {
-        console.log('Ensuring files directory exists...');
         fs.mkdirSync(filesDir, { recursive: true });
     }
 });

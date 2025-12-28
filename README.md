@@ -1,48 +1,59 @@
-# YeMo Screenshot Tools
+YEOSHOT - HIGH PERFORMANCE WEB ARCHIVER
 
-YeMo Screenshot Tools is a high-performance web application designed for capturing high-resolution website screenshots. Built with a Neo-Brutalist aesthetic, it offers both a user-friendly GUI and a robust API for developers.
+YeMoSHOT is a robust, Node.js-based web screenshot tool designed for developers and power users. It utilizes a headless browser engine (Puppeteer) to capture high-resolution screenshots of any website. The system features a responsive Neo-Brutalist web interface and a fully documented REST API for seamless integration.
 
-## Features
+FEATURES
 
-- **Multi-Device Support**: Preset viewports for Desktop, Laptop, Tablet, and Mobile.
-- **Custom Resolution**: Define specific width and height for your captures.
-- **Auto-Cleanup**: Privacy-focused system that automatically deletes files after 24 hours.
-- **Developer API**: Simple REST endpoints to integrate screenshot capabilities into other apps.
-- **Neo-Brutalist UI**: Modern, high-contrast interface.
+- High-Speed Rendering: Optimized for fast capture and minimal latency.
+- Responsive Design: Works perfectly on Desktop, Mobile, and Tablets.
+- REST API: Native API endpoint for easy integration with other applications.
+- Auto-Cleanup: Automatically deletes generated files after 24 hours to save storage.
+- Multi-Viewport Support: Preset dimensions for Desktop, MacBook, iPhone, Pixel, and Custom sizes.
 
-## Quick Start
+INSTALLATION
 
-1. Install dependencies:
-```bash
-npm install
-```
+1. Clone the repository:
+   git clone https://github.com/yemobyte/YeMo-SC.git
 
-2. Start the server:
-```bash
-node server.js
-```
+2. Navigate to the project directory:
+   cd YeMo-SC
 
-3. Access the application:
-   - GUI: `http://localhost:3000`
-   - API Docs: `http://localhost:3000/docs.html`
+3. Install dependencies:
+   npm install
 
-## API Documentation
+4. Start the server:
+   node server.js
 
-### 1. Capture Screenshot
-**Endpoint**: `POST /api/screenshot`
+The application will be available at http://localhost:3000.
 
-**Body**:
-```json
+API DOCUMENTATION
+
+Endpoint: POST /api/screenshot
+Content-Type: application/json
+
+Parameters:
+- url (string, required): The absolute URL of the website to capture.
+- deviceType (string, optional): The device viewport preset (e.g., 'desktop', 'iphone-14', 'custom').
+- customWidth (integer, optional): Required if deviceType is 'custom'.
+- customHeight (integer, optional): Required if deviceType is 'custom'.
+
+Response (JSON):
 {
-    "url": "https://example.com",
-    "deviceType": "desktop" // or 'laptop', 'tablet', 'mobile', 'custom'
+  "status": true,
+  "message": "Screenshot success",
+  "data": {
+    "filename": "screenshot-DATE-TIME.png",
+    "url": "http://localhost:3000/files/...",
+    "expires": "24 hours"
+  }
 }
-```
 
-### 2. List Files
-**Endpoint**: `GET /api/files`
+LICENSE
 
-Returns a list of available screenshots and their expiration times.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+See the LICENSE file for details.
 
-## License
-Free for use.
+COPYRIGHT
+
+Copyright (C) 2024 YeMoByte.
+All Rights Reserved.
