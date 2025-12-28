@@ -107,9 +107,23 @@ app.post('/api/screenshot', async (req, res) => {
             await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1');
         }
 
-        const targetUrl = url.startsWith('http') ? url : `https://${url}`;
+        let targetUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            // Default to http for IP-like addresses or if no protocol is specified
+            targetUrl = `http://${url}`;
+        }
 
-        await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+        try {
+            await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+        } catch (gotoError) {
+            // If it failed with an SSL error and we were using https, try falling back to http
+            if (gotoError.message.includes('ERR_SSL_PROTOCOL_ERROR') && targetUrl.startsWith('https://')) {
+                const fallbackUrl = targetUrl.replace('https://', 'http://');
+                await page.goto(fallbackUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+            } else {
+                throw gotoError;
+            }
+        }
 
         const d = new Date();
         const dateStr = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
