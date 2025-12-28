@@ -70,12 +70,11 @@ const devices = {
 };
 
 app.post('/api/screenshot', async (req, res) => {
-    const { url, deviceType, customWidth, customHeight } = req.body;
+    const { url, deviceType, customWidth, customHeight, fullPage } = req.body;
 
     if (!url) return res.status(400).json({ status: false, message: 'URL required' });
 
     let viewport = devices[deviceType];
-
     if (deviceType === 'custom') {
         viewport = {
             width: parseInt(customWidth) || 1920,
@@ -112,45 +111,50 @@ app.post('/api/screenshot', async (req, res) => {
 
         let navigationFailed = false;
         try {
-            await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+            await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
         } catch (gotoError) {
             navigationFailed = true;
             if (gotoError.message.includes('ERR_SSL_PROTOCOL_ERROR') && targetUrl.startsWith('https://')) {
                 try {
                     const fallbackUrl = targetUrl.replace('https://', 'http://');
-                    await page.goto(fallbackUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+                    await page.goto(fallbackUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
                     navigationFailed = false;
-                } catch (fallbackError) {
-                }
+                } catch (e) { }
             }
         }
 
         const d = new Date();
-        const dateStr = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
-        const timeStr = `${d.getHours().toString().padStart(2, '0')}-${d.getMinutes().toString().padStart(2, '0')}-${d.getSeconds().toString().padStart(2, '0')}`;
-        const filename = `screenshot-${dateStr}-${timeStr}.png`;
+        const filename = `screenshot-${Date.now()}.png`;
         const filepath = path.join(filesDir, filename);
 
+        let captureSuccess = true;
         try {
-            // Use fullPage only if navigation was successful; error pages/refused connections often crash on fullPage
+            const isFull = fullPage === true || fullPage === 'true';
             await page.screenshot({
                 path: filepath,
-                fullPage: !navigationFailed
+                fullPage: navigationFailed ? false : isFull
             });
         } catch (screenshotError) {
-            // Final fallback: try a standard viewport screenshot if fullPage failed or page is acting up
             try {
                 await page.screenshot({ path: filepath, fullPage: false });
             } catch (finalError) {
-                throw new Error(`Critical capture failure: ${finalError.message}`);
+                captureSuccess = false;
             }
         }
 
         await browser.close();
 
+        if (!captureSuccess) {
+            return res.json({
+                status: false,
+                message: "Target unreachable or browser crash",
+                customError: true
+            });
+        }
+
         res.json({
             status: true,
-            message: navigationFailed ? "Captured (Site Unreachable)" : "Screenshot success",
+            message: navigationFailed ? "Captured (Site Offline)" : "Screenshot success",
             data: {
                 filename,
                 url: `${req.protocol}://${req.get('host')}/files/${filename}`,
@@ -159,7 +163,7 @@ app.post('/api/screenshot', async (req, res) => {
         });
     } catch (error) {
         if (browser) await browser.close();
-        res.status(500).json({ status: false, message: error.message });
+        res.json({ status: false, message: error.message, customError: true });
     }
 });
 
