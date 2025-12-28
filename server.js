@@ -111,17 +111,19 @@ app.post('/api/screenshot', async (req, res) => {
         }
 
         try {
-            await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+            await page.goto(targetUrl, { waitUntil: 'load', timeout: 30000 });
         } catch (gotoError) {
             if (gotoError.message.includes('ERR_SSL_PROTOCOL_ERROR') && targetUrl.startsWith('https://')) {
                 try {
                     const fallbackUrl = targetUrl.replace('https://', 'http://');
-                    await page.goto(fallbackUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+                    await page.goto(fallbackUrl, { waitUntil: 'load', timeout: 30000 });
                 } catch (fallbackError) {
-                    // Ignore and proceed to screenshot error state
                 }
             }
-            // Proceed to screenshot even on failure (e.g. refused, timeout)
+        }
+
+        if (page.isClosed()) {
+            throw new Error('Page was closed unexpectedly');
         }
 
         const d = new Date();
@@ -130,7 +132,12 @@ app.post('/api/screenshot', async (req, res) => {
         const filename = `screenshot-${dateStr}-${timeStr}.png`;
         const filepath = path.join(filesDir, filename);
 
-        await page.screenshot({ path: filepath, fullPage: true });
+        try {
+            await page.screenshot({ path: filepath, fullPage: true });
+        } catch (screenshotError) {
+            throw new Error(`Failed to capture: ${screenshotError.message}`);
+        }
+
         await browser.close();
 
         res.json({
