@@ -26,6 +26,16 @@ app.get('/docs', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'docs.html'));
 });
 
+app.get('/download/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filepath = path.join(__dirname, 'public', 'files', filename);
+    if (fs.existsSync(filepath)) {
+        res.download(filepath);
+    } else {
+        res.status(404).json({ status: false, message: 'File not found' });
+    }
+});
+
 const publicDir = path.join(__dirname, 'public');
 const filesDir = path.join(publicDir, 'files');
 

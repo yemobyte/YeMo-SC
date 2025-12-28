@@ -287,13 +287,9 @@
         const dlBtn = document.getElementById('dl-btn');
         let currentFileData = null;
         dlBtn.onclick = () => {
-            if (!currentFileData) return;
-            const link = document.createElement('a');
-            link.href = currentFileData.url;
-            link.download = currentFileData.filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            if (currentFileData) {
+                window.location.href = `/download/${currentFileData.filename}`;
+            }
         };
 
         document.getElementById('app').addEventListener('submit', async (e) => {
