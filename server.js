@@ -127,6 +127,11 @@ app.post('/api/screenshot', async (req, res) => {
         const filename = `screenshot-${Date.now()}.png`;
         const filepath = path.join(filesDir, filename);
 
+        const waitTime = navigationFailed ? 0 : 5000;
+        if (waitTime > 0) {
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+        }
+
         let captureSuccess = true;
         try {
             await page.screenshot({
