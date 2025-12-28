@@ -6,6 +6,6 @@
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "express": "^5.2.1",
-    "puppeteer": "^21.0.0"
+    "puppeteer": "^24.1.0"
   }
 }

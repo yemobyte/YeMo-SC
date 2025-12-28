@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:18
 
 # Install dependencies for Puppeteer
 RUN apt-get update && apt-get install -y \
@@ -11,6 +11,12 @@ RUN apt-get update && apt-get install -y \
     libatk-bridge2.0-0 \
     libgtk-3-0 \
     libnss3 \
+    libgbm1 \
+    libasound2 \
+    fonts-liberation \
+    libappindicator3-1 \
+    libxdamage1 \
+    libinsane-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
