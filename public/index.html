@@ -150,8 +150,11 @@
                 <div
                     class="w-10 h-10 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-black group-hover:bg-brand-yellow group-hover:text-black transition-colors">
                     Y</div>
-                <span class="font-black text-2xl tracking-tighter">YeMo<span
-                        class="text-accent-purple">SHOT</span></span>
+                <div class="flex items-center">
+                    <span class="font-black text-2xl tracking-tighter">YeMo</span>
+                    <span
+                        class="font-black text-2xl tracking-tighter bg-black text-white px-2 ml-1 transform -skew-x-6 border-b-4 border-brand-yellow">SHOT</span>
+                </div>
             </a>
 
             <div class="hidden md:flex gap-8 font-bold items-center">
@@ -204,7 +207,6 @@
                         <input type="text" id="url" class="neo-input" placeholder="https://..." required>
                     </div>
 
-                    <!-- Viewport Section - Full Width -->
                     <div class="w-full">
                         <label class="block font-black text-xs uppercase mb-2">Viewport Mode</label>
                         <select id="preset" class="neo-input cursor-pointer" onchange="toggleCustom()">
@@ -272,7 +274,6 @@
         function toggleCustom() {
             const isCustom = document.getElementById('preset').value === 'custom';
             const el = document.getElementById('custom-dims');
-            // Toggle visibility
             el.classList.toggle('hidden', !isCustom);
             el.classList.toggle('grid', isCustom);
         }
@@ -300,7 +301,6 @@
                 const data = await res.json();
                 if (!data.status) throw new Error(data.message);
 
-                // Show result
                 document.getElementById('ss-preview').src = data.data.url;
                 document.getElementById('dl-btn').href = data.data.url;
                 document.getElementById('view-btn').href = data.data.url;
